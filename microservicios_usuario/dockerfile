@@ -1,0 +1,21 @@
+# Dockerfile para el microservicio de tareas
+FROM python:3.9-alpine
+
+# Establecer la variable de entorno para Python
+ENV PYTHONUNBUFFERED=1
+
+# Crear el directorio de la aplicación
+WORKDIR /app
+
+# Copiar requirements.txt e instalar dependencias
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar el resto de la aplicación
+COPY . .
+
+# Exponer el puerto 5000
+EXPOSE 5000
+
+# Comando para iniciar la aplicación
+CMD ["python", "app.py"]
