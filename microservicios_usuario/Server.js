@@ -47,12 +47,15 @@ app.post('/login', async (req, res) => {
 
 // Middleware de autenticación
 function authMiddleware(req, res, next) {
-    const token = req.headers['authorization'];
-    if (!token) return res.status(401).send({ error: 'Token no proporcionado' });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) return res.status(401).send({ error: 'Token no proporcionado' });
 
+    const token = authHeader.split(' ')[1]; // Extrae el token después de "Bearer"
+    if (!token) return res.status(401).send({ error: 'Token no proporcionado' });
+    
     jwt.verify(token, SECRET_KEY, (err, decoded) => {
         if (err) return res.status(403).send({ error: 'Token inválido' });
-        req.userId = decoded.userId;
+        req.userId = decoded.sub;
         next();
     });
 }
