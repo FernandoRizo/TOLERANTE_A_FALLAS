@@ -8,6 +8,15 @@ from bson.objectid import ObjectId
 import requests
 import jwt
 
+# Monitorización con opentelemetry y zipkin
+from opentelemetry import trace
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.exporter.zipkin.json import ZipkinExporter
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
+from opentelemetry.trace import get_current_span
+
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'clave_secreta'  # Debe ser la misma clave usada en el Microservicio de Usuarios
 app.config['JWT_IDENTITY_CLAIM'] = 'sub'  # Usamos 'sub' como claim de identidad
@@ -18,6 +27,26 @@ jwt_manager = JWTManager(app)
 client = MongoClient('mongodb://localhost:27017/')
 db = client.microservicios
 tasks_collection = db.tasks
+
+# region openTelemetry
+# Configurar el nombre del servicio para opentelemetry 
+resource = Resource(attributes={
+    "service.name": "microservicio_tareas"
+})
+
+trace.set_tracer_provider(TracerProvider(resource=resource))
+
+# Exportar zipkin
+zipkin_exporter = ZipkinExporter(
+    # Asegurarse de que Zipkin esté ejecutándose en este endpoint
+    endpoint="http://localhost:9411/api/v2/spans"
+)
+
+# Procesador de spans (para enviar los datos de trace)
+span_processor = BatchSpanProcessor(zipkin_exporter)
+trace.get_tracer_provider().add_span_processor(span_processor)
+
+FlaskInstrumentor.instrument_app(app)
 
 # Ruta para la página de inicio (formulario de inicio de sesión)
 @app.route('/', methods=['GET', 'POST'])
@@ -71,6 +100,7 @@ def register():
 # Ruta para mostrar las tareas
 @app.route('/tasks', methods=['GET', 'POST'])
 def show_tasks():
+    
     # Obtener el token de la cookie
     token = request.cookies.get('token')
     if not token:
@@ -81,6 +111,14 @@ def show_tasks():
         # Decodificar el token para obtener el user_id
         decoded_token = jwt.decode(token, app.config['JWT_SECRET_KEY'], algorithms=["HS256"])
         user_id = decoded_token['sub']
+        
+        # Obtener el span actual y asociar el _id del usuario como atributo
+        span = get_current_span()
+        if span:
+            span.set_attribute("app.user_id", user_id)
+            span.set_attribute("http.method", request.method)
+            span.set_attribute("http.url", request.url)
+
     except jwt.ExpiredSignatureError:
         print("[-] Expired token")
         return redirect(url_for('home'))
@@ -110,6 +148,8 @@ def show_tasks():
 # Ruta para crear tarea
 @app.route('/task_form', methods=['GET', 'POST'])
 def task_form():
+    
+    # Obtener el token de la cookie
     token = request.cookies.get("token")
     if not token:
         print("No token")
@@ -119,6 +159,14 @@ def task_form():
         # Decodificar el token para obtener el user_id
         decoded_token = jwt.decode(token, app.config['JWT_SECRET_KEY'], algorithms=["HS256"])
         user_id = decoded_token['sub']
+        
+        # Obtener el span actual y asociar el _id del usuario como atributo
+        span = get_current_span()
+        if span:
+            span.set_attribute("app.user_id", user_id)
+            span.set_attribute("http.method", request.method)
+            span.set_attribute("http.url", request.url)
+        
     except jwt.ExpiredSignatureError:
         print("[-] Expired token")
         return redirect(url_for("home"))
@@ -149,7 +197,25 @@ def task_form():
 # Ruta para eliminar tarea
 @app.route('/delete_task/<task_id>', methods=['POST'])
 def delete_task(task_id):
+    
+    # Obtener el token de la cookie
+    token = request.cookies.get("token")
+    if not token:
+        print("No token")
+        return redirect(url_for("home"))
+    
     try:
+        # Decodificar el token para obtener el user_id
+        decoded_token = jwt.decode(token, app.config['JWT_SECRET_KEY'], algorithms=["HS256"])
+        user_id = decoded_token['sub']
+        
+        # Obtener el span actual y asociar el _id del usuario como atributo
+        span = get_current_span()
+        if span:
+            span.set_attribute("app.user_id", user_id)
+            span.set_attribute("http.method", request.method)
+            span.set_attribute("http.url", request.url)
+        
         result = tasks_collection.delete_one({"_id": ObjectId(task_id)})
         if result.deleted_count == 0:
             return jsonify({"error": "Tarea no encontrada"}), 404
@@ -169,4 +235,4 @@ def logout():
     return resp
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
