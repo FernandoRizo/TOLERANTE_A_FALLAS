@@ -1,0 +1,36 @@
+version: '3'
+services:
+  user-service:
+    build: ./microservicios_usuario
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/microservicios
+    depends_on:
+      - mongodb
+
+  todo-service:
+    build: ./microservicios_tareas
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/microservicios
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+
+volumes:
+  mongo-data:

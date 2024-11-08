@@ -1,20 +1,21 @@
-# Dockerfile para el microservicio de usuarios
-FROM node:14-alpine
+# Dockerfile para el microservicio de tareas
+FROM python:3.9-alpine
+
+# Establecer la variable de entorno para Python
+ENV PYTHONUNBUFFERED=1
 
 # Crear el directorio de la aplicación
-WORKDIR /app
+WORKDIR /
 
-# Copiar package.json y package-lock.json
-COPY package*.json ./
-
-# Instalar dependencias
-RUN npm install
+# Copiar requirements.txt e instalar dependencias
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar el resto de la aplicación
 COPY . .
 
-# Exponer el puerto 3000
-EXPOSE 3000
+# Exponer el puerto 5000
+EXPOSE 5000
 
 # Comando para iniciar la aplicación
-CMD ["node", "server.js"]
+CMD ["python", "app.py"]

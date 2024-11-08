@@ -1,11 +1,8 @@
-# Microservicio
 Flask
 flask-jwt-extended
 pymongo
 requests
 PyJWT
-
-# Monitorización
 opentelemetry-api
 opentelemetry-sdk
 opentelemetry-instrumentation-flask

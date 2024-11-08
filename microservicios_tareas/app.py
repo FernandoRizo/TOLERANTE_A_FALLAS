@@ -24,12 +24,12 @@ app.config['JWT_IDENTITY_CLAIM'] = 'sub'  # Usamos 'sub' como claim de identidad
 jwt_manager = JWTManager(app)
 
 # Conectar a MongoDB
-client = MongoClient('mongodb://localhost:27017/')
+client = MongoClient('mongodb://mongodb:27017/')
 db = client.microservicios
 tasks_collection = db.tasks
 
 # region openTelemetry
-# Configurar el nombre del servicio para opentelemetry 
+# Configurar el nombre del servicio para opentelemetry
 resource = Resource(attributes={
     "service.name": "microservicio_tareas"
 })
@@ -39,7 +39,7 @@ trace.set_tracer_provider(TracerProvider(resource=resource))
 # Exportar zipkin
 zipkin_exporter = ZipkinExporter(
     # Asegurarse de que Zipkin esté ejecutándose en este endpoint
-    endpoint="http://localhost:9411/api/v2/spans"
+    endpoint="http://zipkin:9411/api/v2/spans"
 )
 
 # Procesador de spans (para enviar los datos de trace)
@@ -48,16 +48,28 @@ trace.get_tracer_provider().add_span_processor(span_processor)
 
 FlaskInstrumentor.instrument_app(app)
 
+# Obtener el span actual y asociar el _id del usuario como atributo ademas de la petición HTTP
+def get_span(user_id = "invitado", request = "GET"):
+    span = get_current_span()
+    if span:
+        span.set_attribute("app.user_id", user_id)
+        span.set_attribute("http.method", request.method)
+        span.set_attribute("http.url", request.url)
+
 # Ruta para la página de inicio (formulario de inicio de sesión)
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    
+    # Obtener el span actual
+    get_span(request=request)
+        
     if request.method == 'POST':
         # Obtener credenciales del formulario
         username = request.form['username']
         password = request.form['password']
 
         # Realizar una solicitud al Microservicio de Usuarios para obtener el token
-        response = requests.post('http://localhost:3000/login', json={
+        response = requests.post('http://user-service:3000/login', json={
             'username': username,
             'password': password
         })
@@ -77,13 +89,17 @@ def home():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    
+    # Obtener el span actual
+    get_span(request=request)
+        
     if request.method == 'POST':
         # Obtener credenciales del formulario
         username = request.form['username']
         password = request.form['password']
 
         # Realizar una solicitud al Microservicio de Usuarios para obtener el token
-        response = requests.post('http://localhost:3000/register', json={
+        response = requests.post('http://user-service:3000/register', json={
             'username': username,
             'password': password
         })
@@ -112,12 +128,8 @@ def show_tasks():
         decoded_token = jwt.decode(token, app.config['JWT_SECRET_KEY'], algorithms=["HS256"])
         user_id = decoded_token['sub']
         
-        # Obtener el span actual y asociar el _id del usuario como atributo
-        span = get_current_span()
-        if span:
-            span.set_attribute("app.user_id", user_id)
-            span.set_attribute("http.method", request.method)
-            span.set_attribute("http.url", request.url)
+        # Obtener el span actual
+        get_span(user_id, request)
 
     except jwt.ExpiredSignatureError:
         print("[-] Expired token")
@@ -160,12 +172,8 @@ def task_form():
         decoded_token = jwt.decode(token, app.config['JWT_SECRET_KEY'], algorithms=["HS256"])
         user_id = decoded_token['sub']
         
-        # Obtener el span actual y asociar el _id del usuario como atributo
-        span = get_current_span()
-        if span:
-            span.set_attribute("app.user_id", user_id)
-            span.set_attribute("http.method", request.method)
-            span.set_attribute("http.url", request.url)
+        # Obtener el span actual
+        get_span(user_id, request)
         
     except jwt.ExpiredSignatureError:
         print("[-] Expired token")
@@ -209,12 +217,8 @@ def delete_task(task_id):
         decoded_token = jwt.decode(token, app.config['JWT_SECRET_KEY'], algorithms=["HS256"])
         user_id = decoded_token['sub']
         
-        # Obtener el span actual y asociar el _id del usuario como atributo
-        span = get_current_span()
-        if span:
-            span.set_attribute("app.user_id", user_id)
-            span.set_attribute("http.method", request.method)
-            span.set_attribute("http.url", request.url)
+        # Obtener el span actual
+        get_span(user_id, request)
         
         result = tasks_collection.delete_one({"_id": ObjectId(task_id)})
         if result.deleted_count == 0:
