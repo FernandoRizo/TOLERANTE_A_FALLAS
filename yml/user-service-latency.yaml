@@ -1,0 +1,13 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: user-service-latency
+spec:
+  action: delay
+  mode: one
+  selector:
+    labelSelectors:
+      app: user-service
+  delay:
+    latency: "1000ms"  # Puedes ajustar la latencia según tu necesidad
+  duration: "120s"  # La duración del caos

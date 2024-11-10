@@ -25,6 +25,9 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+    command: mongod --logpath /dev/null --quiet
+    environment:
+      - MONGODB_LOG_DIR=/dev/null
 
   zipkin:
     image: openzipkin/zipkin

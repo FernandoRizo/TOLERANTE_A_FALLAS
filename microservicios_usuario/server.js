@@ -8,7 +8,8 @@ app.use(express.json());
 
 // Clave secreta para JWT (en producción, usar una variable de entorno)
 const SECRET_KEY = 'clave_secreta';
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/microservicios';
+// const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/microservicios';
+const MONGO_URL = process.env.MONGO_URL || 'mongodb://mongodb:27017/microservicios';
 
 // Conectar a MongoDB
 mongoose.connect(MONGO_URL, {
