@@ -13,13 +13,19 @@ spec:
         app: todo-service
     spec:
       containers:
-        - name: todo-service
-          image: jhotwox/todo-service:latest # Cambia a la imagen adecuada si usas un registro de imágenes
+        - name  : todo-service
+          image: jhotwox/todo-service:1.1 # Cambia a la imagen adecuada si usas un registro de imágenes
           ports:
             - containerPort: 5000
           env:
             - name: MONGO_URL
               value: mongodb://mongodb:27017/microservicios
+          livenessProbe:                     # Liveness Probe
+            httpGet:
+              path: /                        # Ruta para verificar si está vivo
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service

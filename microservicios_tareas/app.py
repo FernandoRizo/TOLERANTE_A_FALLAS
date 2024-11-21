@@ -75,6 +75,7 @@ def home():
         })
 
         if response.status_code != 200:
+            print("Respuesta -> ", response.status_code)
             error_message = response.json().get('error', 'Error desconocido')
             return render_template('login.html', error=error_message)
 
@@ -230,6 +231,11 @@ def delete_task(task_id):
         print("[-] Error no reconocido", err)
         return jsonify({"error": "Error al eliminar la tarea", "details": str(err)}), 500
         # return redirect(url_for("home"))
+
+# Ruta para probar conexión
+@app.route('/livez', methods=['GET'])
+def livez():
+    return jsonify({'status': 'healthy'}), 200
 
 # Ruta para cerrar sesión
 @app.route('/logout')

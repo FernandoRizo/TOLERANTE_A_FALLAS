@@ -66,3 +66,16 @@ http://192.168.49.2:30500/
 
 ### Servidor de monitorización con zipkin
 http://192.168.49.2:31500/zipkin/
+
+
+### NOTAS
+>Reiniciar un deploy
+```BASH
+kubectl apply -f mongodb.yaml
+kubectl rollout restart deployment user-service
+```
+
+user-service 1.1: URL de mongo modificada (No sirve)
+user-service 1.2: URL de mongo modificada (funca)
+user-service 1.3: Se implemento zipkin (No muestra el nombre del servicio)
+user-service 1.4: Se arreglo la implementación de zipkin
