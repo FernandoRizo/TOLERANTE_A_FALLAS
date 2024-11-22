@@ -64,43 +64,43 @@ http://localhost:20001
 
 ### TODO service en Flask
 >Registro
-<img src=""/>
+<img src="https://github.com/FernandoRizo/TOLERANTE_A_FALLAS/blob/main/images/2_register.png?raw=true"/>
 
 >Login
-<img src=""/>
+<img src="https://github.com/FernandoRizo/TOLERANTE_A_FALLAS/blob/main/images/3_login_con_usuario.png?raw=true"/>
 
 >Lista de tareas
-<img src=""/>
+<img src="https://github.com/FernandoRizo/TOLERANTE_A_FALLAS/blob/main/images/4_lista_tareas.png?raw=true"/>
 
 >Agregar tarea
-<img src=""/>
+<img src="https://github.com/FernandoRizo/TOLERANTE_A_FALLAS/blob/main/images/5_crear_tarea.png?raw=true"/>
 
 >Tarea agregada
-<img src=""/>
+<img src="https://github.com/FernandoRizo/TOLERANTE_A_FALLAS/blob/main/images/6_lista_un_todo.png?raw=true"/>
 
 >Segunda tarea agregada
-<img src=""/>
+<img src="https://github.com/FernandoRizo/TOLERANTE_A_FALLAS/blob/main/images/7_lista_dos_todo.png?raw=true"/>
 
 >Tarea eliminada
-<img src=""/>
+<img src="https://github.com/FernandoRizo/TOLERANTE_A_FALLAS/blob/main/images/8_eliminar_todo.png?raw=true"/>
 
 >Menu de zipkin (monitorización)
-<img src=""/>
+<img src="https://github.com/FernandoRizo/TOLERANTE_A_FALLAS/blob/main/images/9.0_zipkin_main.png?raw=true"/>
 
 >Traza en zipkin
-<img src=""/>
+<img src="https://github.com/FernandoRizo/TOLERANTE_A_FALLAS/blob/main/images/9.1_traza_zipkin.png?raw=true"/>
 
 >Trazas filtradas por servicio
-<img src=""/>
+<img src="https://github.com/FernandoRizo/TOLERANTE_A_FALLAS/blob/main/images/9.2_zipkin_user_service.png?raw=true"/>
 
 >Grafico de servicios en kiali con istio
-<img src=""/>
+<img src="https://github.com/FernandoRizo/TOLERANTE_A_FALLAS/blob/main/images/9.3_kiali_graph.png?raw=true"/>
 
->Aplicar ingenieria del caos (latencia)
-<img src=""/>
+>Aplicar ingenieria del caos (latencia de 3 segundos durante 90s)
+<img src="https://github.com/FernandoRizo/TOLERANTE_A_FALLAS/blob/main/images/9.4_aplicar_latencia.png?raw=true"/>
 
 >Pruebas de latencia monitorizando el trafico desde zipkin
-<img src=""/>
+<img src="https://github.com/FernandoRizo/TOLERANTE_A_FALLAS/blob/main/images/9.5_zipkin_latencia.png?raw=true"/>
 
 ### ISTIO Y KIALI
 >Grafo de servicios
