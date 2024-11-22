@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name  : todo-service
-          image: jhotwox/todo-service:1.1 # Cambia a la imagen adecuada si usas un registro de imágenes
+          image: jhotwox/todo-service:latest # Cambia a la imagen "1.1" o "latest"
           ports:
             - containerPort: 5000
           env:

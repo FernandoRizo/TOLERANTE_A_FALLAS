@@ -9,5 +9,5 @@ spec:
     labelSelectors:
       app: user-service
   delay:
-    latency: "1000ms"  # Puedes ajustar la latencia según tu necesidad
-  duration: "120s"  # La duración del caos
+    latency: "3000ms"  # Puedes ajustar la latencia según tu necesidad
+  duration: "90s"  # La duración del caos
