@@ -4,20 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Tarea</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='task_form_style.css') }}">
 </head>
 <body>
-    <h1>Crear Tarea</h1>
+    <div class="box">
+        <h1>Crear Tarea</h1>
 
-    <!-- Formulario para crear una tarea -->
-    <form method="POST">
-        <label for="title">Título:</label>
-        <input type="text" id="title" name="title" required><br><br>
+        <!-- Formulario para crear una tarea -->
+        <form method="POST">
+            <label for="title">Título:</label>
+            <input type="text" id="title" name="title" required><br><br>
 
-        <label for="description">Descripción:</label>
-        <textarea id="description" name="description" required></textarea><br><br>
+            <label for="description">Descripción:</label>
+            <textarea id="description" name="description" required></textarea><br><br>
 
-        <button type="submit">Crear Tarea</button>
-    </form>
-
+            <button type="submit">Crear Tarea</button>
+        </form>
+    </div>
 </body>
 </html>

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: jhotwox/user-service:latest # Cambia a la imagen adecuada si usas un registro de imágenes
+          image: jhotwox/user-service:1.4 # Cambia a la etiqueta, ya sea "latest", "1.1" ... "1.4"
           ports:
             - containerPort: 3000
           env:

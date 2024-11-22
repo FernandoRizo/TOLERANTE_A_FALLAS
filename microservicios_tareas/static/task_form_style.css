@@ -1,0 +1,102 @@
+/* Reset básico */
+body, h1, p, form, label, input, textarea, button {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Fondo y alineación del contenedor */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #4caf50, #8bc34a);
+    color: #333;
+    padding: 20px;
+}
+
+/* Contenedor del formulario */
+.box {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Título */
+h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    text-align: center;
+    color: #4caf50;
+}
+
+/* Etiquetas */
+label {
+    font-size: 14px;
+    display: block;
+    margin-bottom: 8px;
+    text-align: left;
+    color: #333;
+}
+
+/* Campos de texto */
+input[type="text"], textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background: #f9f9f9;
+}
+
+input[type="text"]:focus, textarea:focus {
+    border-color: #4caf50;
+    outline: none;
+    background: #ffffff;
+}
+
+/* Textarea específico */
+textarea {
+    resize: vertical;
+    height: 100px;
+    font-family: Arial, sans-serif;
+}
+
+/* Botón */
+button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #4caf50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #388e3c;
+}
+
+/* Responsividad */
+@media (max-width: 480px) {
+    form {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+}
